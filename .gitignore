@@ -10,7 +10,7 @@
 *.DS_Store
 hs_err_pid*
 replay_pid*
-db
+db/
 out/
 target/
 !.mvn/wrapper/maven-wrapper.jar
