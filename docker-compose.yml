@@ -3,12 +3,12 @@ services:
     ports:
       - "9090:9090"
 
-  stats-db:
-    image: postgres:16.1
+  db:
+    image: h2
 
   ewm-service:
     ports:
       - "8080:8080"
 
   ewm-db:
-    image: postgres:16.1
+    image: h2
