@@ -7,7 +7,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>stats_server</artifactId>
+    <artifactId>stats-server</artifactId>
     <packaging>jar</packaging>
 
     <name>stats_server</name>

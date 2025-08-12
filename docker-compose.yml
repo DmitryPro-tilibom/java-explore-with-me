@@ -1,16 +1,16 @@
 services:
   stats-server:
-      build: /stats_server
+      build: /stats-server
       image: ewm_stats:latest
       container_name: ewm_stats_container
       ports:
         - "9090:9090"
       depends_on:
-        - ewm_db
+        - ewm-db
       environment:
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm_db:5432/ewm_db
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-db
 
-  ewm_db:
+  ewm-db:
     image: postgres:16.1
     container_name: postgres
     ports:
