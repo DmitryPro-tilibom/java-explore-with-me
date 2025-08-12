@@ -1,6 +1,6 @@
 services:
   stats-server:
-      build: /stats-server
+      build: ./stats/stats-server
       image: ewm_stats:latest
       container_name: ewm_stats_container
       ports:
