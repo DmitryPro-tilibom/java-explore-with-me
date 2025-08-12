@@ -9,9 +9,11 @@ services:
         - ewm-db
       environment:
         - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-db
+        - POSTGRES_USER=user
+        - POSTGRES_PASSWORD=user
 
   ewm-db:
-    image: postgres:16.1
+    image: postgres:latest
     container_name: postgres
     ports:
         - "6542:5432"
