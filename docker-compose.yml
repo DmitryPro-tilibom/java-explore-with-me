@@ -22,14 +22,14 @@ services:
     volumes:
       - /var/lib/postgresql/data
 
-  ewm-service:
-      build: ./main
-      image: ewm_main:latest
-      container_name: ewm_main_container
-      ports:
-        - "8080:8080"
-      depends_on:
-        - ewm-db
-        - stats-server
-      environment:
-        - CLIENT_URL=http://stats-server:9090
+  #ewm-service:
+   #   build: ./main
+    #  image: ewm_main:latest
+     # container_name: ewm_main_container
+      #ports:
+       # - "8080:8080"
+      #depends_on:
+       # - ewm-db
+        #- stats-server
+      #environment:
+       # - CLIENT_URL=http://stats-server:9090
