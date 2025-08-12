@@ -1,5 +1,5 @@
 services:
-  stats_server:
+  stats-server:
       build: /stats_server
       image: ewm_stats:latest
       container_name: ewm_stats_container
@@ -28,7 +28,3 @@ services:
       container_name: ewm_main_container
       ports:
         - "8080:8080"
-      depends_on:
-        - ewm_db
-        - stats_server
-
