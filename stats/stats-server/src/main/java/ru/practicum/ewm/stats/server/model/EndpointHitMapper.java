@@ -2,12 +2,21 @@ package ru.practicum.ewm.stats.server.model;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
+import ru.practicum.ewm.stats.server.model.EndpointHit;
 
 @UtilityClass
 public class EndpointHitMapper {
-    public EndpointHit toHit(EndpointHitDto hit) {
+    public EndpointHit toEndpointHit(EndpointHitDto hit) {
         return new EndpointHit(
-                hit.getId(),
+                hit.getApp(),
+                hit.getUri(),
+                hit.getIp(),
+                hit.getTimestamp()
+        );
+    }
+
+    public EndpointHitDto toEndpointHitDto(EndpointHit hit) {
+        return new EndpointHitDto(
                 hit.getApp(),
                 hit.getUri(),
                 hit.getIp(),

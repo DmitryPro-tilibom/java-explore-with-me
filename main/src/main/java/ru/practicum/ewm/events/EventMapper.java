@@ -1,11 +1,16 @@
 package ru.practicum.ewm.events;
 
 import ru.practicum.ewm.categories.CategoryMapper;
-import ru.practicum.ewm.events.dto.*;
+
+import ru.practicum.ewm.events.dto.EventFullDto;
+import ru.practicum.ewm.events.dto.EventShortDtoWithViews;
+import ru.practicum.ewm.events.dto.EventFullDtoWithViews;
+import ru.practicum.ewm.events.dto.EventShortDto;
+import ru.practicum.ewm.events.dto.NewEventDto;
 import ru.practicum.ewm.events.model.Event;
+import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.locations.LocationMapper;
 import ru.practicum.ewm.users.UserMapper;
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class EventMapper {

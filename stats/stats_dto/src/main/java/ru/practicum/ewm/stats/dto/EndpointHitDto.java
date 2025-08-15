@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EndpointHitDto {
-    private Long id;
+    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     @NotBlank
     private String app;
@@ -27,6 +27,6 @@ public class EndpointHitDto {
 
     @NotNull
     @Past
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime timestamp;
 }

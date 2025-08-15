@@ -1,55 +1,57 @@
 package ru.practicum.ewm.events.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AccessLevel;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.locations.LocationDto;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import ru.practicum.ewm.stats.dto.EndpointHitDto;
+import ru.practicum.ewm.locations.LocationDto;
+
 import java.time.LocalDateTime;
 
-import static ru.practicum.ewm.util.DateConstant.DATE_TIME_PATTERN;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewEventDto {
 
     @Size(min = 20, max = 2000)
     @NotBlank
-    String annotation;
+    private String annotation;
 
     @NotNull
-    Long category;
+    private Long category;
 
     @Size(min = 20, max = 7000)
     @NotBlank
-    String description;
+    private String description;
 
     @NotNull
     @Future
-    @JsonFormat(pattern = DATE_TIME_PATTERN)
-    LocalDateTime eventDate;
+    @JsonFormat(pattern = EndpointHitDto.DATE_TIME_PATTERN)
+    private LocalDateTime eventDate;
 
     @NotNull
     @Valid
-    LocationDto location;
+    private LocationDto location;
 
-    boolean paid = false;
+    private boolean paid = false;
 
     @PositiveOrZero
-    int participantLimit = 0;
+    private int participantLimit = 0;
 
-    boolean requestModeration = true;
+    private boolean requestModeration = true;
 
     @Size(min = 3, max = 120)
     @NotBlank
-    String title;
+    private String title;
 
     public Boolean getPaid() {
         return paid;

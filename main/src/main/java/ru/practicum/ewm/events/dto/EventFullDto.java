@@ -1,53 +1,53 @@
 package ru.practicum.ewm.events.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Builder;
 import ru.practicum.ewm.categories.dto.CategoryDto;
 import ru.practicum.ewm.events.model.State;
 import ru.practicum.ewm.locations.LocationDto;
+import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.users.dto.UserShortDto;
 
 import java.time.LocalDateTime;
-
-import static ru.practicum.ewm.util.DateConstant.DATE_TIME_PATTERN;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventFullDto {
-    Long id;
+    private Long id;
 
-    String annotation;
+    private String annotation;
 
-    CategoryDto category;
+    private CategoryDto category;
 
-    Long confirmedRequests;
+    private Long confirmedRequests;
 
-    @JsonFormat(pattern = DATE_TIME_PATTERN)
-    LocalDateTime createdOn;
+    @JsonFormat(pattern = EndpointHitDto.DATE_TIME_PATTERN)
+    private LocalDateTime createdOn;
 
-    String description;
+    private String description;
 
-    @JsonFormat(pattern = DATE_TIME_PATTERN)
-    LocalDateTime eventDate;
+    @JsonFormat(pattern = EndpointHitDto.DATE_TIME_PATTERN)
+    private LocalDateTime eventDate;
 
-    UserShortDto initiator;
+    private UserShortDto initiator;
 
-    LocationDto location;
+    private LocationDto location;
 
-    Boolean paid;
+    private Boolean paid;
 
-    Integer participantLimit;
+    private Integer participantLimit;
 
-    @JsonFormat(pattern = DATE_TIME_PATTERN)
-    LocalDateTime publishedOn;
+    @JsonFormat(pattern = EndpointHitDto.DATE_TIME_PATTERN)
+    private LocalDateTime publishedOn;
 
-    Boolean requestModeration;
+    private Boolean requestModeration;
 
-    State state;
+    private State state;
 
-    String title;
+    private String title;
 }

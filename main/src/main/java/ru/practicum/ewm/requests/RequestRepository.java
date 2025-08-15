@@ -3,7 +3,7 @@ package ru.practicum.ewm.requests;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.practicum.ewm.requests.dto.ConfirmedRequest;
+import ru.practicum.ewm.requests.dto.ConfirmedRequests;
 import ru.practicum.ewm.requests.model.ParticipationRequest;
 import ru.practicum.ewm.requests.model.RequestStatus;
 
@@ -26,5 +26,5 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
             "FROM ParticipationRequest AS r " +
             "WHERE r.event.id IN (:ids) AND r.status = :status " +
             "GROUP BY (r.event)")
-    List<ConfirmedRequest> findAllByEventIdInAndStatus(@Param("ids")List<Long> ids, @Param("status")RequestStatus status);
+    List<ConfirmedRequests> findAllByEventIdInAndStatus(@Param("ids")List<Long> ids, @Param("status")RequestStatus status);
 }

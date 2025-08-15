@@ -19,7 +19,7 @@ public class StatsService {
     private final StatsRepository statsRepository;
 
     public void saveHit(EndpointHitDto hit) {
-        statsRepository.save(EndpointHitMapper.toHit(hit));
+        statsRepository.save(EndpointHitMapper.toEndpointHit(hit));
     }
 
     @Transactional(readOnly = true)
