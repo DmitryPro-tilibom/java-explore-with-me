@@ -1,4 +1,4 @@
-package ru.practicum.ewm.categories;
+package ru.practicum.ewm.users;
 
 import lombok.*;
 
@@ -10,17 +10,21 @@ import jakarta.persistence.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "categories")
-public class Category {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
-    public Category(String name) {
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    public User(String name, String email) {
         this.name = name;
+        this.email = email;
     }
 }

@@ -1,15 +1,9 @@
 package ru.practicum.ewm.compilations;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.ewm.events.model.Event;
 
+import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -26,13 +20,11 @@ public class Compilation {
     private Long id;
 
     @Column(nullable = false)
-    @NotBlank
-    @Size(max = 50)
     private String title;
 
-    private Boolean pinned = false;
+    private Boolean pinned;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "compilation_event",
             joinColumns = @JoinColumn(name = "compilation_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id"))

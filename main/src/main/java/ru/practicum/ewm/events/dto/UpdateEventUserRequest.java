@@ -3,11 +3,11 @@ package ru.practicum.ewm.events.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.categories.dto.CategoryDto;
-import ru.practicum.ewm.events.model.State;
 import ru.practicum.ewm.locations.LocationDto;
-import ru.practicum.ewm.users.dto.UserShortDto;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 import static ru.practicum.ewm.util.DateConstant.DATE_TIME_PATTERN;
@@ -17,39 +17,31 @@ import static ru.practicum.ewm.util.DateConstant.DATE_TIME_PATTERN;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EventFullDtoWithViews {
-    Long id;
+public class UpdateEventUserRequest {
 
+    @Size(min = 20, max = 2000)
     String annotation;
 
-    CategoryDto category;
+    Long category;
 
-    Long confirmedRequests;
-
-    @JsonFormat(pattern = DATE_TIME_PATTERN)
-    LocalDateTime createdOn;
-
+    @Size(min = 20, max = 7000)
     String description;
 
+    @Future
     @JsonFormat(pattern = DATE_TIME_PATTERN)
     LocalDateTime eventDate;
 
-    UserShortDto initiator;
-
     LocationDto location;
 
-    boolean paid;
+    Boolean paid;
 
+    @PositiveOrZero
     Integer participantLimit;
 
-    @JsonFormat(pattern = DATE_TIME_PATTERN)
-    LocalDateTime publishedOn;
+    Boolean requestModeration;
 
-    boolean requestModeration;
+    String stateAction;
 
-    State state;
-
+    @Size(min = 3, max = 120)
     String title;
-
-    Long views;
 }

@@ -3,10 +3,11 @@ package ru.practicum.ewm.exceptions;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.ewm.stats.dto.EndpointHitDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static ru.practicum.ewm.util.DateConstant.DATE_TIME_PATTERN;
 
 @Data
 @Builder
@@ -15,6 +16,6 @@ public class ApiError {
     private final String message;
     private final String reason;
     private final String status;
-    @JsonFormat(pattern = EndpointHitDto.DATE_TIME_PATTERN)
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private final LocalDateTime timestamp;
 }
