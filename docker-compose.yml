@@ -1,48 +1,67 @@
-services:
-  stats-server:
-    ports:
-      - "9090:9090"
-    container_name: ewm_stats
-    build:
-      context: ./stats/stats-server
+version: '3.8'
 
+services:
   stats-db:
     image: postgres:16.1
-    container_name: stats-db
-    ports:
-      - "5431:5432"
-    volumes:
-      - ./volumes/stats:/var/lib/postgresql/data/
+    container_name: postgres-stats-db-container
     environment:
-      - POSTGRES_DB=ewm-db
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=user
+      POSTGRES_DB: ewm-stats
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     healthcheck:
-      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
-      timeout: 5s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ewm-stats"]
       interval: 5s
+      timeout: 5s
       retries: 10
-
-  ewm-service:
     ports:
-      - "8080:8080"
-    container_name: main_service_container
-    build:
-      context: ./main
+      - "5432:5432"
+
+  stats-server:
+    build: ./stats/stats-server
+    image: stats-server-image
+    container_name: stats-server-container
+    depends_on:
+      stats-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://stats-db:5432/ewm-stats
+      SERVER_PORT: 9090
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "9090:9090"
 
   ewm-db:
     image: postgres:16.1
-    container_name: ewm-db
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./volumes/ewm:/var/lib/postgresql/data/
+    container_name: main-db-container
     environment:
-      - POSTGRES_DB=ewm-db
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=user
+      POSTGRES_DB: ewm-main
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: main
     healthcheck:
-      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
-      timeout: 5s
+      test: ["CMD-SHELL", "pg_isready -U main -d ewm-main"]
       interval: 5s
+      timeout: 5s
       retries: 10
+    ports:
+      - "6542:5432"
+
+  ewm-service:
+    build: ./main
+    image: main-image
+    container_name: main-container
+    depends_on:
+      ewm-db:
+        condition: service_healthy
+      stats-server:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ewm-db:5432/ewm-main
+      CLIENT_URL: http://stats-server:9090
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    command: ["./wait-for-it.sh", "ewm-db:5432", "-t", "30", "--", "java", "-jar", "app.jar"]
