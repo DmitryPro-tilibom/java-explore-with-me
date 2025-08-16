@@ -1,46 +1,67 @@
 package ru.practicum.ewm.stats.client;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestTemplate;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 
 @Service
-public class StatsClient extends BaseClient {
-
+public class StatsClient {
     @Value("${client.url}")
     private String serverUrl;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(EndpointHitDto.DATE_TIME_PATTERN);
+    private final RestTemplate rest;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public ResponseEntity<Object> saveHit(EndpointHitDto hit) {
-        return post(serverUrl + "/hit", hit);
+    public StatsClient() {
+        this.rest = new RestTemplate();
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+        rest.setRequestFactory(requestFactory);
     }
 
-    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end,
-                                           List<String> uris, Boolean unique) {
-        Objects.requireNonNull(start, "Start date cannot be null");
-        Objects.requireNonNull(end, "End date cannot be null");
-
-        StringBuilder url = new StringBuilder(serverUrl)
-                .append("/stats?start=")
-                .append(start.format(formatter))
-                .append("&end=")
-                .append(end.format(formatter));
-
-        if (uris != null && !uris.isEmpty()) {
-            uris.forEach(uri -> url.append("&uris=").append(uri));
+    public ResponseEntity<Object> saveHit(EndpointHitDto hit) {
+        ResponseEntity<Object> response;
+        try {
+            response = rest.postForEntity(serverUrl + "/hit", hit, Object.class);
+        } catch (HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());
         }
-
-        if (unique != null) {
-            url.append("&unique=").append(unique);
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(response.getStatusCode());
+        if (response.hasBody()) {
+            return responseBuilder.body(response.getBody());
         }
+        return responseBuilder.build();
+    }
 
-        return get(url.toString());
+    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        StringBuilder url = new StringBuilder(serverUrl + "/stats?");
+        for (String uri : uris) {
+            url.append("&uris=").append(uri);
+        }
+        url.append("&unique=").append(unique);
+        url.append("&start=").append(start.format(formatter));
+        url.append("&end=").append(end.format(formatter));
+
+        ResponseEntity<Object> response;
+        try {
+            response = rest.exchange(url.toString(), HttpMethod.GET, null, Object.class);
+        } catch (HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());
+        }
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(response.getStatusCode());
+        if (response.hasBody()) {
+            return responseBuilder.body(response.getBody());
+        }
+        return responseBuilder.build();
     }
 }
