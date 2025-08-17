@@ -10,7 +10,6 @@ import ru.practicum.ewm.stats.dto.ViewStats;
 import ru.practicum.ewm.stats.server.model.EndpointHitMapper;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
