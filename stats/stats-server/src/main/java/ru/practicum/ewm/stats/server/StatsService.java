@@ -25,8 +25,7 @@ public class StatsService {
 
     @Transactional(readOnly = true)
     public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        String checkStart = DateTimeFormatter.ofPattern(EndpointHitDto.DATE_TIME_PATTERN).toString();
-        if (start.isAfter(end) || checkStart.isBlank()) {
+        if (start.isAfter(end)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong timestamp.");
         }
         if (unique) {
