@@ -25,6 +25,7 @@ public class EndpointHitDto {
     @NotBlank
     private String ip;
 
+    @NotBlank
     @NotNull
     @Past
     @JsonFormat(pattern = DATE_TIME_PATTERN)
