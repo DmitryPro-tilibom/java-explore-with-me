@@ -10,6 +10,7 @@ import ru.practicum.ewm.stats.dto.ViewStats;
 import ru.practicum.ewm.stats.server.model.EndpointHitMapper;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -24,7 +25,8 @@ public class StatsService {
 
     @Transactional(readOnly = true)
     public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        if (start.isAfter(end) || start.equals("")) {
+        String checkStart = DateTimeFormatter.ofPattern(EndpointHitDto.DATE_TIME_PATTERN).toString();
+        if (start.isAfter(end) || checkStart.isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong timestamp.");
         }
         if (unique) {
