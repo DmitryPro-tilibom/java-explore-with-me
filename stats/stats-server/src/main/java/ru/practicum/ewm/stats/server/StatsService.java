@@ -1,5 +1,6 @@
 package ru.practicum.ewm.stats.server;
 
+import ru.practicum.ewm.stats.server.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class StatsService {
 
     @Transactional(readOnly = true)
     public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        validateTime(start, end);
         if (start.isAfter(end)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong timestamp.");
         }
@@ -37,6 +39,15 @@ public class StatsService {
                 return statsRepository.findAllHitsWithUris(uris, start, end);
             }
             return statsRepository.findAllHitsWithoutUris(start, end);
+        }
+    }
+
+    private void validateTime(LocalDateTime start, LocalDateTime end) {
+        if (start == null || end == null) {
+            throw new ValidationException("Параметр 'start' не может быть позже 'end'");
+        }
+        if (start.isAfter(end)) {
+            throw new ValidationException("Параметр 'start' не может быть позже 'end'");
         }
     }
 }

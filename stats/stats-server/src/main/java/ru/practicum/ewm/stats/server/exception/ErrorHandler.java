@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler({MissingServletRequestParameterException.class, DateTimeException.class})
+    @ExceptionHandler({MissingServletRequestParameterException.class, DateTimeException.class, ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError badRequest(RuntimeException e) {
         log.error(stackTraceToString(e));
