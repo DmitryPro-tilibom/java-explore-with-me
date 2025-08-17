@@ -33,7 +33,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ApiError conflictEvent(ForbiddenException e) {
         log.error(stackTraceToString(e));
         return ApiError.builder()

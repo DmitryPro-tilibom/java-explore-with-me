@@ -1,5 +1,6 @@
 package ru.practicum.ewm.requests.dto;
 
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ConfirmedRequests {
+    @PositiveOrZero
     private long count;
+
+    @PositiveOrZero
     private Long event;
 }
