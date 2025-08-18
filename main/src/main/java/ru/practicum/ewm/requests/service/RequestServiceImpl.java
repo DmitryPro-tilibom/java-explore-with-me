@@ -19,7 +19,7 @@ import ru.practicum.ewm.requests.model.ParticipationRequest;
 import ru.practicum.ewm.requests.model.RequestStatus;
 import ru.practicum.ewm.users.User;
 import ru.practicum.ewm.requests.dto.ConfirmedRequests;
-import ru.practicum.ewm.users.service.UserService;
+import ru.practicum.ewm.users.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class RequestServiceImpl implements RequestService {
     private final RequestRepository requestRepository;
     private final EventInfoService eventInfoService;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Override
     public ParticipationRequestDto addRequest(Long userId, Long eventId) {
@@ -150,6 +150,10 @@ public class RequestServiceImpl implements RequestService {
     @Transactional(readOnly = true)
     public List<ParticipationRequestDto> getRequestsByUser(Long userId) {
         log.info("Getting all requests for user ID: {}", userId);
+        if (!userRepository.existsById(userId)) {
+            log.error("User not found with ID: {}", userId);
+            throw new NotFoundException("User with id=" + userId + " was not found");
+        }
         checkUser(userId);
         List<ParticipationRequestDto> requests = requestRepository.findAllByRequesterId(userId).stream()
                 .map(RequestMapper::toParticipationRequestDto)
@@ -179,12 +183,12 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private User getUser(Long userId) {
-        return userService.getUserById(userId);
+        return userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException("User with id=" + userId + " was not found"));
     }
 
     private void checkUser(Long userId) {
-        if (!userService.existsById(userId)) {
-            log.error("User not found with ID: {}", userId);
+        if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id=" + userId + " was not found");
         }
     }

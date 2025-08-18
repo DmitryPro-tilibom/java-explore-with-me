@@ -13,7 +13,7 @@ replay_pid*
 db/
 out/
 target/
-volumes/
+volumes
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
