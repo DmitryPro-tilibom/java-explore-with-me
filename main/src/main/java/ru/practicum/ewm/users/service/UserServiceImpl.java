@@ -74,17 +74,4 @@ public class UserServiceImpl implements UserService {
                     return new NotFoundException("User with id=" + userId + " was not found");
                 });
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean existsById(Long userId) {
-        log.debug("Checking existence of user with ID: {}", userId);
-        boolean exists = userRepository.existsById(userId);
-        if (exists) {
-            log.debug("User with ID: {} exists", userId);
-        } else {
-            log.debug("User with ID: {} does not exist", userId);
-        }
-        return exists;
-    }
 }
