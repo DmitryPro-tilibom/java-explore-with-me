@@ -13,11 +13,11 @@ INSERT INTO locations (lat, lon) VALUES ('55.75', '37.61');
 
 INSERT INTO events (annotation, category_id, created_on, description, event_date, initiator_id, location_id, paid,
                     participant_limit, request_moderation, title)
-VALUES ('защита диплома', 1, '2025-08-08 11:00:00', 'перед здоровой аудиторией',
+VALUES ('защита диплома', 1, '2025-08-20 11:00:00', 'онлайн',
         '2026-04-04 10:00:00', 2, 1, 'false', 0, 'true', 'event1');
 INSERT INTO events (annotation, category_id, created_on, description, event_date, initiator_id, location_id, paid,
                     participant_limit, request_moderation, title)
-VALUES ('прогулка по Москва', 1, '2025-08-09 12:00:00', 'на автобусе',
-        '2026-07-07 11:00:00', 2, 1, 'false', 0, 'true', 'event2');
+VALUES ('прогулка по Санкт-Петербургу', 1, '2025-08-20 12:00:00', 'пешочком',
+        '2026-08-21 11:00:00', 2, 1, 'false', 0, 'true', 'event2');
 
 UPDATE events SET state = 'PUBLISHED' WHERE id = 1;

@@ -25,7 +25,7 @@ public class Compilation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     @NotBlank
     @Size(max = 50)
     private String title;

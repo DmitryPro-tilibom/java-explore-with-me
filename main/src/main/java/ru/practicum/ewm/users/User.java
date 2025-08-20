@@ -28,12 +28,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 250)
+    @Column(length = 250)
     @NotBlank
     @Size(min = 2, max = 250)
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column
     @Email
     @Size(max = 254)
     @NotBlank

@@ -30,7 +30,7 @@ public class Location {
     @NotNull
     private Float lat;
 
-    @Column(nullable = false)
+    @Column
     @NotNull
     private Float lon;
 
