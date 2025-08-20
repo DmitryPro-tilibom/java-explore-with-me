@@ -2,6 +2,7 @@ package ru.practicum.ewm.events.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import ru.practicum.ewm.events.dto.EventFullDtoWithViews;
+import ru.practicum.ewm.events.dto.EventShortDtoWithViews;
 import ru.practicum.ewm.events.model.Event;
 
 import java.util.List;
@@ -13,4 +14,8 @@ public interface EventStatService {
     EventFullDtoWithViews addViewsToEvent(Event event, Long confirmedRequests);
 
     void saveHit(HttpServletRequest request);
+
+    List<EventFullDtoWithViews> getEventsWithStats(List<Event> events);
+
+    List<EventShortDtoWithViews> getShortEventsWithStats(List<Event> events);
 }

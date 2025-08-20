@@ -36,10 +36,7 @@ import ru.practicum.ewm.users.User;
 import ru.practicum.ewm.users.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.practicum.ewm.events.model.State.PENDING;
@@ -202,15 +199,21 @@ public class EventServiceImpl implements EventService {
         log.info("Admin events search with params: users={}, states={}, categories={}, rangeStart={}, rangeEnd={}",
                 users, states, categories, rangeStart, rangeEnd);
 
-        validateDateRange(rangeStart, rangeEnd);
+        if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
+            log.error("Invalid date range: start {} is after end {}", rangeStart, rangeEnd);
+            throw new ValidationException("Incorrectly made request.");
+        }
 
         Specification<Event> specification = buildAdminSpecification(users, states, categories, rangeStart, rangeEnd);
         PageRequest pageRequest = PageRequest.of(from / size, size);
         List<Event> events = eventRepository.findAll(specification, pageRequest).getContent();
 
-        Map<Long, Long> confirmedRequests = getConfirmedRequests(events);
-        List<EventFullDtoWithViews> result = eventStatService.addViewsToEvents(events, confirmedRequests);
+        if (events.isEmpty()) {
+            log.debug("No events found for admin search");
+            return new ArrayList<>();
+        }
 
+        List<EventFullDtoWithViews> result = eventStatService.getEventsWithStats(events);
         log.debug("Admin search returned {} events", result.size());
         return result;
     }
@@ -224,7 +227,10 @@ public class EventServiceImpl implements EventService {
         log.info("Public events search with params: text={}, categories={}, paid={}, rangeStart={}, rangeEnd={}, " +
                 "onlyAvailable={}, sort={}", text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort);
 
-        validateDateRange(rangeStart, rangeEnd);
+        if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
+            log.error("Invalid date range: start {} is after end {}", rangeStart, rangeEnd);
+            throw new ValidationException("START can't be after END.");
+        }
 
         Specification<Event> specification = buildPublicSpecification(
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable
@@ -233,20 +239,15 @@ public class EventServiceImpl implements EventService {
         PageRequest pageRequest = buildPageRequest(from, size, sort);
         List<Event> events = eventRepository.findAll(specification, pageRequest).getContent();
 
-        Map<Long, Long> confirmedRequests = getConfirmedRequests(events);
-        List<EventShortDtoWithViews> result = events.stream()
-                .map(event -> {
-                    Long views = eventStatService.addViewsToEvent(event, confirmedRequests.getOrDefault(event.getId(), 0L))
-                            .getViews();
-                    return EventMapper.toEventShortDtoWithViews(
-                            event,
-                            views,
-                            confirmedRequests.getOrDefault(event.getId(), 0L)
-                    );
-                })
-                .collect(Collectors.toList());
+        if (events.isEmpty()) {
+            log.debug("No events found for public search");
+            return new ArrayList<>();
+        }
+
+        List<EventShortDtoWithViews> result = eventStatService.getShortEventsWithStats(events);
 
         eventStatService.saveHit(request);
+
         log.debug("Public search returned {} events", result.size());
         return result;
     }
@@ -344,7 +345,6 @@ public class EventServiceImpl implements EventService {
     }
 
     private void handleAdminStateAction(Event event, StateActionAdmin stateAction) {
-
         if (PUBLISH_EVENT.equals(stateAction) && !PENDING.equals(event.getState())) {
             log.error("Attempt to publish non-pending event ID: {}", event.getId());
             throw new DataIntegrityViolationException("Event can't be published because it's not pending");

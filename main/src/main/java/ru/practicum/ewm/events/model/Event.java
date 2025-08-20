@@ -87,7 +87,7 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private  State state;
 
-    @Column(nullable = false, length = 120)
+    @Column(length = 120)
     @NotBlank
     @Size(min = 3, max = 120)
     private  String title;
